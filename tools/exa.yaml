@@ -1,0 +1,16 @@
+tool: exa
+setups:
+  exa_instant:
+    class: main
+    settings:
+      search_type: instant
+    pricing:
+      list_usd: 0.007
+      basis: list
+  exa_fast:
+    class: main
+    settings:
+      search_type: fast
+    pricing:
+      list_usd: 0.007
+      basis: list

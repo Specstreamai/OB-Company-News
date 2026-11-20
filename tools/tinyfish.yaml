@@ -1,0 +1,7 @@
+tool: tinyfish
+setups:
+  tinyfish:
+    class: main
+    pricing:
+      list_usd: 0.0
+      basis: list

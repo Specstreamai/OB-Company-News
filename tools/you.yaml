@@ -1,0 +1,16 @@
+tool: you
+setups:
+  you_highlights:
+    class: main
+    settings:
+      core: false
+    pricing:
+      list_usd: 0.005
+      basis: list
+  you_highlights_core:
+    class: main
+    settings:
+      core: true
+    pricing:
+      list_usd: 0.005
+      basis: list

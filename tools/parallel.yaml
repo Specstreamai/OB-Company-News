@@ -1,0 +1,30 @@
+tool: parallel
+setups:
+  parallel_turbo:
+    class: main
+    settings:
+      mode: turbo
+    pricing:
+      list_usd: 0.001
+      basis: list
+  parallel_fast:
+    class: main
+    settings:
+      mode: fast
+    pricing:
+      list_usd: 0.001
+      basis: list
+  parallel_basic:
+    class: main
+    settings:
+      mode: basic
+    pricing:
+      list_usd: 0.005
+      basis: list
+  parallel_advanced:
+    class: main
+    settings:
+      mode: advanced
+    pricing:
+      list_usd: 0.005
+      basis: list

@@ -1,0 +1,35 @@
+# harness
+
+Runs the benchmark and calls each tool. No grading code lives here.
+
+- `cli.py` — Command-line runner (`list-providers`, `run`, `evaluate`, `build-snapshot`, `verify`).
+- `__main__.py` — Lets you start the runner with `python -m harness`.
+- `orchestration.py` — Sends every question to every setup, saves each result, then builds the run summary.
+- `registry.py` — Reads `tools/<tool>.yaml`, builds each setup, and sets the default run order.
+- `tool_base.py` — Shared base for tools: the common request flow, result cleanup, and the skip record for news indexes.
+- `adapters/` — The request and response code for each tool, one file per tool.
+- `http_client.py` — Sends HTTP requests with retries and keeps a record of each one with API keys hidden.
+- `openai_client.py` — Asks an OpenAI model for a structured answer. Used by the judge and by PredictLeads to pick event types.
+- `models.py` — The shapes of questions, search hits, request records, and judge verdicts.
+- `artifacts.py` — Reads the question file and writes JSON files safely.
+- `verification.py` — Checks a finished run: file hashes, result counts, and that no API key was saved.
+- `tests/` — Tests for the runner, the request records, and the tool adapters.
+
+## What a run writes
+
+```text
+<run-dir>/
+├── run-plan.json
+├── run.json
+├── manifest.json
+├── cells/<question-id>/<setup>.json
+└── audit/<question-id>/<setup>.json
+```
+
+- `run-plan.json` — The question file and its hash, the setups, the number of questions, and the start time.
+- `cells/` — One result per question and setup: the hits, the extracted answer, and the judge's verdicts.
+- `audit/` — The full HTTP request and response behind each result.
+- `run.json` — The run plan, every result, and the board.
+- `manifest.json` — A hash of every file, so anyone can check nothing changed.
+
+API keys and similar headers are replaced with `***REDACTED***` before anything is saved. Response bodies are kept so the scoring can be checked. Read each tool's terms and the output before you publish a run.

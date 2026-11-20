@@ -1,0 +1,7 @@
+tool: perplexity
+setups:
+  perplexity_low:
+    class: main
+    pricing:
+      list_usd: 0.005
+      basis: list

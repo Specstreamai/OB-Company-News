@@ -1,0 +1,16 @@
+tool: brave
+setups:
+  brave:
+    class: main
+    settings:
+      variant: web
+    pricing:
+      list_usd: 0.005
+      basis: list
+  brave_llm:
+    class: main
+    settings:
+      variant: llm
+    pricing:
+      list_usd: 0.005
+      basis: list

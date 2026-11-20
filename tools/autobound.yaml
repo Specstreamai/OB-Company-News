@@ -1,0 +1,7 @@
+tool: autobound
+setups:
+  autobound:
+    class: main
+    pricing:
+      list_usd: 0.019
+      basis: list

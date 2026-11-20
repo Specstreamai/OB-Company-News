@@ -1,0 +1,26 @@
+tool: nimble
+setups:
+  nimble_lite:
+    class: main
+    settings:
+      depth: lite
+      focus: general
+    pricing:
+      list_usd: 0.0011
+      basis: list
+  nimble_lite_news:
+    class: main
+    settings:
+      depth: lite
+      focus: news
+    pricing:
+      list_usd: 0.0011
+      basis: list
+  nimble_standard:
+    class: main
+    settings:
+      depth: standard
+      focus: general
+    pricing:
+      list_usd: 0.005
+      basis: list

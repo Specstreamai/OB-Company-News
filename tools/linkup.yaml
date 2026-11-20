@@ -1,0 +1,16 @@
+tool: linkup
+setups:
+  linkup_fast:
+    class: main
+    settings:
+      depth: fast
+    pricing:
+      list_usd: 0.005
+      basis: list
+  linkup_standard:
+    class: main
+    settings:
+      depth: standard
+    pricing:
+      list_usd: 0.005
+      basis: list

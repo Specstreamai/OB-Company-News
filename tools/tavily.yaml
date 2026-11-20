@@ -1,0 +1,18 @@
+tool: tavily
+setups:
+  tavily_basic:
+    class: main
+    settings:
+      depth: basic
+    pricing:
+      # 1 PAYG credit. https://docs.tavily.com/documentation/api-credits
+      list_usd: 0.008
+      basis: list
+  tavily_advanced:
+    class: main
+    settings:
+      depth: advanced
+    pricing:
+      # 2 PAYG credits. https://docs.tavily.com/documentation/api-credits
+      list_usd: 0.016
+      basis: list

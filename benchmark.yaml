@@ -1,0 +1,7 @@
+name: OB-Company-News
+order:
+  serves: Teams choosing a web-search API or news index to surface timely, relevant company news.
+  win: Higher recall and precision of verified company news events under the same time window and budget.
+  budget_usd: 0
+  refresh_days: 30
+  not_measured_max: 0.1

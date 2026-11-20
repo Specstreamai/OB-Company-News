@@ -1,0 +1,7 @@
+tool: predictleads
+setups:
+  predictleads_category:
+    class: main
+    pricing:
+      list_usd: 0.040
+      basis: list

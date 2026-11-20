@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openbenchmarks-company-news"
+version = "0.1.0"
+description = "Reproducible benchmark runner for company-news search APIs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "boto3>=1.40,<2",
+  "openai>=2.0,<3",
+  "pydantic>=2.8,<3",
+  "python-dotenv>=1.0,<2",
+  "pyyaml>=6.0,<7",
+  "requests>=2.32,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.12,<1"]
+
+[project.scripts]
+company-news = "harness.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness", "judge"]
+exclude = ["harness/tests", "judge/tests"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"tools" = "tools"
+
+[tool.pytest.ini_options]
+testpaths = ["harness", "judge"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
