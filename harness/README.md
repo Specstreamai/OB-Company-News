@@ -9,7 +9,7 @@ Runs the benchmark and calls each tool. No grading code lives here.
 - `tool_base.py` — Shared base for tools: the common request flow, result cleanup, and the skip record for news indexes.
 - `adapters/` — The request and response code for each tool, one file per tool.
 - `http_client.py` — Sends HTTP requests with retries and keeps a record of each one with API keys hidden.
-- `openai_client.py` — Asks an OpenAI model for a structured answer. Used by the judge and by PredictLeads to pick event types.
+- `openai_client.py` — Asks an OpenAI model for a structured answer. Used by the judge, by PredictLeads to pick event types, and by Parallel to write its keyword queries.
 - `models.py` — The shapes of questions, search hits, request records, and judge verdicts.
 - `artifacts.py` — Reads the question file and writes JSON files safely.
 - `verification.py` — Checks a finished run: file hashes, result counts, and that no API key was saved.

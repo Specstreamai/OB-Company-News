@@ -29,6 +29,8 @@ TOOLS = (
     "tavily",
     "serp",
     "linkup",
+    "keenable",
+    "model_only",
 )
 
 

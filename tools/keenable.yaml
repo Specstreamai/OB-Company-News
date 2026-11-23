@@ -1,0 +1,17 @@
+tool: keenable
+setups:
+  # 1 credit per search (search.pro and search.realtime), $4 / 1,000 requests as supplied 2026-10-27.
+  keenable_pro:
+    class: main
+    settings:
+      mode: pro
+    pricing:
+      list_usd: 0.004
+      basis: list
+  keenable_realtime:
+    class: main
+    settings:
+      mode: realtime
+    pricing:
+      list_usd: 0.004
+      basis: list

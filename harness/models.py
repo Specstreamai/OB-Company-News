@@ -70,7 +70,7 @@ class HttpAudit(BaseModel):
 
 class SearchResult(BaseModel):
     endpoint: str
-    surface: Literal["web-search", "news-index"]
+    surface: Literal["web-search", "news-index", "agent", "baseline"]
     hits: list[Hit] = Field(default_factory=list)
     audit: HttpAudit
 

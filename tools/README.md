@@ -4,7 +4,7 @@ One `<tool>.yaml` file per tool. Keeping each tool in its own file makes it easy
 
 Each file lists the tool's setups. For each setup:
 
-- `class` — `main` setups run by default. Any other class runs only when named with `--endpoints`.
+- `class` — `main` setups run by default. Any other class runs only when named with `--endpoints`: `agent` (`firecrawl_agent_apollo`) and `baseline` (`model_only`).
 - `settings` — Options passed to the tool's code in `harness/adapters/<tool>.py`.
 - `pricing` — The public list price per request in US dollars. Put the source and the date you checked it in a comment.
 

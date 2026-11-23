@@ -62,7 +62,7 @@ def skipped(endpoint: str, case: Case, reason: str) -> SearchResult:
 
 class ProviderAdapter(ABC):
     name: str
-    surface: Literal["web-search", "news-index"]
+    surface: Literal["web-search", "news-index", "agent", "baseline"]
     docs_url: str
     required_env: tuple[str, ...]
 

@@ -7,3 +7,12 @@ setups:
       # https://www.context.dev/pricing (2026-10-20)
       list_usd: 0.0044
       basis: list
+  # Highlights off: each hit carries the result description only.
+  context_nohl:
+    class: main
+    settings:
+      highlights: false
+    pricing:
+      # Same top-up rate, 1 credit / 10 results without Highlights.
+      list_usd: 0.0022
+      basis: list
