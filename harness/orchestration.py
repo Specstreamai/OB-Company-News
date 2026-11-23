@@ -13,7 +13,7 @@ from judge.metrics import aggregate
 
 from .artifacts import load_cases, read_json, sha256, write_json
 from .models import Case, SearchResult
-from .registry import list_prices, selected_adapters
+from .registry import pricing, selected_adapters
 
 
 def _stamp() -> str:
@@ -53,6 +53,9 @@ def _cell(case: Case, result: SearchResult, evaluation: dict[str, Any] | None, a
         "surface": result.surface,
         "ok": result.audit.ok,
         "status_code": result.audit.status_code,
+        # Cost inputs: credits a credit-billed tool reports, and extract-model tokens a tool spent on its request.
+        "credits_used": result.audit.request.get("credits_used"),
+        "tool_llm_tokens": (result.audit.request.get("query_plan") or {}).get("tokens"),
         "error": result.audit.error,
         "latency_ms": result.audit.latency_ms,
         "started_at": result.audit.started_at,
@@ -159,7 +162,7 @@ def build_snapshot(run_dir: Path) -> dict[str, Any]:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "run": plan,
         "cell_count": len(cells),
-        "leaderboard": aggregate(cells, list_prices()),
+        "leaderboard": aggregate(cells, pricing()),
         "cells": cells,
     }
     write_json(run_dir / "run.json", payload)

@@ -18,7 +18,7 @@ setups:
       toolkits: [apollo]
       max_toolkit_calls: 16
     pricing:
-      # Billed per job in credits (creditsUsed); Standard top-up $5 / 2,000 credits = $0.0025 / credit.
-      # Mean 8.9 credits per question on the 300-question held-out run of 2026-11-16.
-      list_usd: 0.0222
-      basis: mean_credits
+      # Billed per job in the credits it used (creditsUsed); Standard top-up $5 / 2,000 credits.
+      # Mean 8.9 credits ($0.022) per question on the 300-question held-out run of 2026-11-16.
+      credit_usd: 0.0025
+      basis: credits

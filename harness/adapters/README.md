@@ -18,11 +18,8 @@ Web search tools take the question as written:
 - `tinyfish.py` — TinyFish search.
 - `you.py` — You.com search with highlights.
 
-News indexes look up a company's events:
+News index:
 
-- `autobound.py` — Autobound news signals for a company domain.
-- `datahyena.py` — Datahyena company timeline.
-- `predictleads.py` — PredictLeads news events. A model first picks which event types to ask for.
 - `seltz.py` — Seltz search: news scope (`seltz_news`), web scope (`seltz_web`), and web scope with passages instead of full content (`seltz_web_snippets`).
 
 The baseline needs no tool:

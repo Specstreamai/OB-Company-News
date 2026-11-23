@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from harness.models import Case, Hit
+from harness.models import Case, Hit, SearchResult
 from harness.openai_client import parse_openai
 from harness.tool_base import WebAdapter, hit
 
@@ -62,6 +62,14 @@ def _parse(payload: Any) -> list[Hit]:
     return output
 
 
+class ParallelAdapter(WebAdapter):
+    def search(self, case: Case) -> SearchResult:
+        result = super().search(case)
+        plan, _ = plan_queries(case.question)  # cached: the plan this request sent
+        result.audit.request["query_plan"] = plan
+        return result
+
+
 def setup(name: str, *, mode: str) -> WebAdapter:
     def build(case: Case):
         plan, _ = plan_queries(case.question)
@@ -72,4 +80,4 @@ def setup(name: str, *, mode: str) -> WebAdapter:
              "advanced_settings": {"max_results": 10}},
             None, 90 if mode in {"basic", "advanced"} else 60,
         )
-    return WebAdapter(name, "https://docs.parallel.ai/api-reference/search", ("PARALLEL_API_KEY",), build, _parse)
+    return ParallelAdapter(name, "https://docs.parallel.ai/api-reference/search", ("PARALLEL_API_KEY",), build, _parse)

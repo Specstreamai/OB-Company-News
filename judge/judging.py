@@ -4,14 +4,44 @@ from harness.models import AccuracyVerdict, Case, ExtractVerdict, Hit, RecallVer
 
 from .bedrock import call_json
 
+# Both prompts are the ones the published board was graded with, word for word.
 ACCURACY_PROMPT = """Score the extracted answer against gold. correct=true only if every gold cell is present in the answer. Synonyms and equivalent numeric forms are allowed. Do not use outside knowledge or the search snippets.
 
-Return only JSON: {"correct": true, "cells_hit": 0, "note": "short reason"}.
+### RESPONSE FORMAT (CRITICAL)
+
+Return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
+
+{
+  "correct": true,
+  "cells_hit": 0,
+  "note": "short reason"
+}
+
+correct must be a boolean. cells_hit is how many gold cells are present in the answer. note is a short string.
 """
 
-RECALL_PROMPT = """Decide which search snippets already contain the gold fact. A snippet is answer-bearing only if a reader can recover every gold cell from that snippet alone, without outside knowledge. Synonyms and equivalent numeric forms are allowed. Ranks are 1-indexed.
+RECALL_PROMPT = """Decide which search snippets already contain the gold fact.
 
-Return only JSON: {"bearing_ranks": [1, 4], "note": "short reason"}. Use [] if none.
+A snippet is answer-bearing only if a reader could recover every gold cell from
+that snippet alone, without outside knowledge. Synonyms and equivalent numeric
+forms are allowed (eleven million = $11 million = $11M). Digit coincidence is
+not enough: do not treat "2.0" as matching "2026", or "$20M" as matching
+"$11 million". Stale directory pages that name a different person, company, or
+round are not answer-bearing.
+
+Ranks are 1-indexed in the order the snippets are listed.
+
+### RESPONSE FORMAT (CRITICAL)
+
+Return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
+
+{
+  "bearing_ranks": [1, 4],
+  "note": "short reason"
+}
+
+bearing_ranks is the list of ranks whose snippet contains every gold cell.
+Use [] if none do. note is at most 12 words.
 """
 
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pydantic import BaseModel
+
 from harness.models import Case, ExtractVerdict, Hit
 from harness.openai_client import parse_openai
 
@@ -15,6 +17,10 @@ MODEL_ONLY_PROMPT = (
     "specific answer. Leave the answer empty only if you cannot name anything specific."
 )
 
+class ModelOnlyAnswer(BaseModel):
+    answer: str = ""
+
+
 NO_TOKENS = {"input_tokens": 0, "output_tokens": 0}
 
 
@@ -27,7 +33,7 @@ def extract(case: Case, hits: list[Hit]) -> tuple[ExtractVerdict, dict[str, int]
 
 def model_only_answer(case: Case) -> tuple[ExtractVerdict, dict[str, int]]:
     """The baseline: the question alone, no results, no tools."""
-    verdict, tokens = parse_openai(MODEL_ONLY_PROMPT, {"question": case.question}, ExtractVerdict)
+    verdict, tokens = parse_openai(MODEL_ONLY_PROMPT, {"question": case.question}, ModelOnlyAnswer)
     return ExtractVerdict(answer=verdict.answer.strip()), tokens
 
 

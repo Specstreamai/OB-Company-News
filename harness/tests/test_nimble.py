@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from harness.models import Case
-from harness.registry import DEFAULT_ENDPOINTS, all_adapters, list_prices
+from harness.registry import DEFAULT_ENDPOINTS, all_adapters, pricing
 
 
 @pytest.mark.parametrize("name,depth,focus,price", [
@@ -27,4 +27,4 @@ def test_search_contract_and_evidence(name, depth, focus, price):
     assert len({h.url for h in hits}) == 10
     assert adapter.parse(None) == []
     assert name in DEFAULT_ENDPOINTS
-    assert list_prices()[name] == price
+    assert pricing()[name]["list_usd"] == price

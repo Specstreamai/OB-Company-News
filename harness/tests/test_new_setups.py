@@ -64,7 +64,7 @@ def test_seltz_web_setups():
     assert adapters["seltz_web_snippets"].body(CASE)["fields"] == {"snippets": True}
     from harness.adapters.seltz import _parse
     hits = _parse({"documents": [{"url": "https://a.com", "snippets": [{"text": "one"}, {"text": "two"}]}]})
-    assert hits[0].snippet == "one\ntwo"
+    assert hits[0].snippet == "one two"  # whitespace runs collapse, as on the board
 
 
 def test_context_without_highlights_uses_description():
