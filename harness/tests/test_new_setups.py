@@ -58,7 +58,6 @@ def _recall():
 
 def test_seltz_web_setups():
     adapters = all_adapters()
-    assert adapters["seltz_news"].surface == "news-index"
     assert adapters["seltz_web"].body(CASE) == {"query": CASE.question, "max_results": 10, "scope": "web"}
     assert adapters["seltz_web"].surface == "web-search"
     assert adapters["seltz_web_snippets"].body(CASE)["fields"] == {"snippets": True}

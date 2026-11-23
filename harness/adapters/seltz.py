@@ -28,13 +28,14 @@ class SeltzAdapter(ProviderAdapter):
     docs_url = "https://docs.seltz.ai/api-reference/search"
     required_env = ("SELTZ_API_KEY",)
 
-    def __init__(self, name: str, *, scope: str = "news", snippets: bool = False) -> None:
+    surface = "web-search"
+
+    def __init__(self, name: str, *, snippets: bool = False) -> None:
         super().__init__(name)
-        self.scope, self.snippets = scope, snippets
-        self.surface = "news-index" if scope == "news" else "web-search"
+        self.snippets = snippets
 
     def body(self, case: Case) -> dict[str, Any]:
-        body: dict[str, Any] = {"query": case.question, "max_results": 10, "scope": self.scope}
+        body: dict[str, Any] = {"query": case.question, "max_results": 10, "scope": "web"}
         if self.snippets:
             body["fields"] = {"snippets": True}
         return body

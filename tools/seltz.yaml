@@ -1,14 +1,7 @@
 tool: seltz
 setups:
-  seltz_news:
-    class: main
-    pricing:
-      list_usd: 0.005
-      basis: list
   seltz_web:
     class: main
-    settings:
-      scope: web
     pricing:
       list_usd: 0.005
       basis: list
@@ -16,7 +9,6 @@ setups:
   seltz_web_snippets:
     class: main
     settings:
-      scope: web
       snippets: true
     pricing:
       list_usd: 0.005

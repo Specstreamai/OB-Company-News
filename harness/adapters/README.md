@@ -16,11 +16,8 @@ Web search tools take the question as written:
 - `serp.py` — Google results through a RapidAPI search service.
 - `tavily.py` — Tavily search.
 - `tinyfish.py` — TinyFish search.
+- `seltz.py` — Seltz search, web scope: full content (`seltz_web`) or the highest-scoring passages (`seltz_web_snippets`).
 - `you.py` — You.com search with highlights.
-
-News index:
-
-- `seltz.py` — Seltz search: news scope (`seltz_news`), web scope (`seltz_web`), and web scope with passages instead of full content (`seltz_web_snippets`).
 
 The baseline needs no tool:
 

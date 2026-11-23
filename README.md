@@ -19,9 +19,8 @@ General web search APIs and dedicated company-news indexes are evaluated on fact
 
 14 tools configured in [`tools/`](tools/README.md), plus the `model_only` baseline:
 
-- **Web search APIs:** `brave`, `context`, `exa`, `firecrawl`, `keenable`, `linkup`, `nimble`, `parallel`, `perplexity`, `serp`, `tavily`, `tinyfish`, `you`, and Seltz's web scope
+- **Web search APIs:** `brave`, `context`, `exa`, `firecrawl`, `keenable`, `linkup`, `nimble`, `parallel`, `perplexity`, `serp`, `tavily`, `tinyfish`, `you`, and `seltz` (web scope)
 - **Agents (run when named):** `firecrawl_agent_apollo`
-- **News index:** `seltz` (news scope)
 
 ## Dataset
 
