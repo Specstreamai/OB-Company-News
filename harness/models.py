@@ -63,14 +63,14 @@ class HttpAudit(BaseModel):
     status_code: int | None = None
     error: str = ""
     attempts: list[Attempt] = Field(default_factory=list)
-    latency_ms: int | None  # None when no request was made (a skipped news-index call)
+    latency_ms: int | None  # None when no request was made (the model_only baseline)
     started_at: str
     ended_at: str
 
 
 class SearchResult(BaseModel):
     endpoint: str
-    surface: Literal["web-search", "news-index"]
+    surface: Literal["web-search", "news-index", "agent", "baseline"]
     hits: list[Hit] = Field(default_factory=list)
     audit: HttpAudit
 

@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from harness.models import Case
-from harness.registry import DEFAULT_ENDPOINTS, all_adapters, list_prices
+from harness.registry import DEFAULT_ENDPOINTS, all_adapters, pricing
 
 
 @pytest.mark.parametrize("name,core", [("you_highlights", False), ("you_highlights_core", True)])
@@ -20,4 +20,4 @@ def test_you_request_and_highlights(name, core):
                         "contents": {"highlights": ["Relevant evidence"]}}]}})
     assert hits[0].snippet == "Relevant evidence"
     assert name in DEFAULT_ENDPOINTS
-    assert list_prices()[name] == 0.005
+    assert pricing()[name]["list_usd"] == 0.005

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,7 +13,7 @@ from judge.metrics import aggregate
 
 from .artifacts import load_cases, read_json, sha256, write_json
 from .models import Case, SearchResult
-from .registry import list_prices, selected_adapters
+from .registry import pricing, selected_adapters
 
 
 def _stamp() -> str:
@@ -27,7 +28,19 @@ def _audit_path(run_dir: Path, case_id: str, endpoint: str) -> Path:
     return run_dir / "audit" / case_id / f"{endpoint}.json"
 
 
-def _cell(case: Case, result: SearchResult, evaluation: dict[str, Any] | None, audit_path: Path) -> dict[str, Any]:
+def _grade(case: Case, result: SearchResult) -> tuple[dict[str, Any] | None, str | None]:
+    """Grade one result. A failed extract or judge call is recorded on the cell instead of stopping the
+    run; the cell keeps no evaluation, so `evaluate --run-dir` grades it again later."""
+    try:
+        return evaluate_search_result(case, result), None
+    except Exception as exc:  # noqa: BLE001
+        error = f"{type(exc).__name__}: {str(exc)[:500]}"
+        print(f"  SCORE ERROR {case.id} {result.endpoint}: {error}", file=sys.stderr, flush=True)
+        return None, error
+
+
+def _cell(case: Case, result: SearchResult, evaluation: dict[str, Any] | None, audit_path: Path,
+          score_error: str | None = None) -> dict[str, Any]:
     return {
         "case_id": case.id,
         "question": case.question,
@@ -40,6 +53,9 @@ def _cell(case: Case, result: SearchResult, evaluation: dict[str, Any] | None, a
         "surface": result.surface,
         "ok": result.audit.ok,
         "status_code": result.audit.status_code,
+        # Cost inputs: credits a credit-billed tool reports, and extract-model tokens a tool spent on its request.
+        "credits_used": result.audit.request.get("credits_used"),
+        "tool_llm_tokens": (result.audit.request.get("query_plan") or {}).get("tokens"),
         "error": result.audit.error,
         "latency_ms": result.audit.latency_ms,
         "started_at": result.audit.started_at,
@@ -47,6 +63,7 @@ def _cell(case: Case, result: SearchResult, evaluation: dict[str, Any] | None, a
         "hits": [item.model_dump() for item in result.hits],
         "audit_path": str(audit_path),
         "evaluation": evaluation,
+        "score_error": score_error,
     }
 
 
@@ -92,8 +109,8 @@ def run_benchmark(
             result = fetched[endpoint]
             audit_file = _audit_path(run_dir, case.id, endpoint)
             write_json(audit_file, result.audit.model_dump())
-            evaluation = None if search_only else evaluate_search_result(case, result)
-            return endpoint, _cell(case, result, evaluation, audit_file.relative_to(run_dir))
+            evaluation, score_error = (None, None) if search_only else _grade(case, result)
+            return endpoint, _cell(case, result, evaluation, audit_file.relative_to(run_dir), score_error)
 
         if fetched:
             with ThreadPoolExecutor(max_workers=len(fetched)) as pool:
@@ -128,7 +145,7 @@ def evaluate_run(run_dir: Path, *, workers: int = 4) -> None:
         result = SearchResult(
             endpoint=cell["endpoint"], surface=cell["surface"], hits=cell.get("hits") or [], audit=audit,
         )
-        cell["evaluation"] = evaluate_search_result(case, result)
+        cell["evaluation"], cell["score_error"] = _grade(case, result)
         return path, cell
 
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
@@ -145,7 +162,7 @@ def build_snapshot(run_dir: Path) -> dict[str, Any]:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "run": plan,
         "cell_count": len(cells),
-        "leaderboard": aggregate(cells, list_prices()),
+        "leaderboard": aggregate(cells, pricing()),
         "cells": cells,
     }
     write_json(run_dir / "run.json", payload)

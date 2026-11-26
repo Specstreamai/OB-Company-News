@@ -26,7 +26,7 @@ Ground-truth fields used by `judge/`:
 | `cells` | array | Required facts that must all appear for an answer to count as correct. |
 | `ground_truth_url` | string | Source URL containing the verified answer. |
 
-Additional fields used by news indexes that query by company rather than free-text question:
+Optional fields, kept on each result for analysis:
 
 | Field | Type | Description |
 |---|---|---|

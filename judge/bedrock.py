@@ -13,6 +13,14 @@ def model_id() -> str:
     return os.getenv("BEDROCK_JUDGE_MODEL", "us.anthropic.claude-opus-5")
 
 
+def _text(response: dict[str, Any]) -> str:
+    return "\n".join(
+        block.get("text", "")
+        for block in response.get("output", {}).get("message", {}).get("content", [])
+        if isinstance(block, dict)
+    ).strip()
+
+
 def call_json(system: str, payload: dict[str, Any], *, max_tokens: int) -> tuple[dict[str, Any], dict[str, int]]:
     client = boto3.client(
         "bedrock-runtime",
@@ -39,6 +47,15 @@ def call_json(system: str, payload: dict[str, Any], *, max_tokens: int) -> tuple
                 kwargs.pop("additionalModelRequestFields", None)
                 kwargs["inferenceConfig"].pop("temperature", None)
                 response = client.converse(**kwargs)
+            if not _text(response):
+                stop = response.get("stopReason")
+                response = None
+                last = RuntimeError(f"empty Bedrock response: stopReason={stop!r}")
+                if stop in ("content_filtered", "guardrail_intervened"):
+                    break  # the same prompt is filtered again; retrying only adds wait time
+                if attempt < 3:
+                    time.sleep(min(2 ** attempt, 8))
+                continue
             break
         except Exception as exc:  # noqa: BLE001
             last = exc
@@ -46,11 +63,7 @@ def call_json(system: str, payload: dict[str, Any], *, max_tokens: int) -> tuple
                 time.sleep(min(2 ** attempt, 8))
     if response is None:
         raise RuntimeError(f"Bedrock judge failed: {last}")
-    text = "\n".join(
-        block.get("text", "")
-        for block in response.get("output", {}).get("message", {}).get("content", [])
-        if isinstance(block, dict)
-    ).strip()
+    text = _text(response)
     start, end = text.find("{"), text.rfind("}")
     if start < 0 or end < start:
         raise ValueError(f"judge returned no JSON object: {text[:200]}")

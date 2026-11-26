@@ -1,0 +1,9 @@
+tool: model_only
+setups:
+  # No search: the extract model answers from its own knowledge. Runs only when named:
+  # --endpoints model_only
+  model_only:
+    class: baseline
+    pricing:
+      list_usd: 0.0
+      basis: none

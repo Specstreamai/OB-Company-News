@@ -35,7 +35,8 @@ def _web_build(case: Case):
 def _llm_build(case: Case):
     return (
         "POST", "https://api.search.brave.com/res/v1/llm/context",
-        {"X-Subscription-Token": os.environ["BRAVE_SEARCH_API_KEY"], "Content-Type": "application/json"},
+        {"X-Subscription-Token": os.environ["BRAVE_SEARCH_API_KEY"], "Accept": "application/json",
+         "Content-Type": "application/json"},
         {"q": case.question, "count": 10, "maximum_number_of_urls": 10,
          "maximum_number_of_tokens": 8192, "enable_local": False}, None, 30,
     )

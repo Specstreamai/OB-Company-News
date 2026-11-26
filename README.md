@@ -1,6 +1,6 @@
 # OB-Company-News
 
-Open, independent benchmark of APIs for company news: web search APIs and dedicated news indexes, measured on how accurately they surface recent, verified company news for AI agents, such as executive hires, acquisitions, product launches and funding. Every tool answers the same questions with one query, no query rewrite and no page fetch, graded by the same judge. Tools measured: Brave, Context, Exa, Firecrawl, Linkup, Nimble, Parallel, Perplexity, SERP, Tavily, TinyFish, You.com, Autobound, DataHyena, PredictLeads and Seltz.
+Open, independent benchmark of APIs for company news: web search APIs and dedicated news indexes, measured on how accurately they surface recent, verified company news for AI agents, such as executive hires, acquisitions, product launches and funding. Every search tool answers the same questions with one request and no page fetch, graded by the same judge. Tools measured: Brave, Context, Exa, Firecrawl, Keenable, Linkup, Nimble, Parallel, Perplexity, SERP, Tavily, TinyFish, You.com and Seltz.
 
 **Live leaderboard:** [openbenchmarks.com/company-news](https://openbenchmarks.com/company-news) · **Public dataset:** [`openbenchmarks/OB-News-Websearch`](https://huggingface.co/datasets/openbenchmarks/OB-News-Websearch)
 
@@ -10,16 +10,17 @@ Published and maintained by **[OpenBenchmarks Labs](https://openbenchmarks.com)*
 
 General web search APIs and dedicated company-news indexes are evaluated on factual company-news questions (such as executive hires, acquisitions, product launches, and funding announcements).
 
-- **Fixed protocol:** One query per question, no query rewriting, and no secondary page fetch.
+- **Fixed protocol:** One query per question, no query rewriting, and no secondary page fetch. Parallel is the exception: its API takes an objective plus keyword queries, which the extract model writes (`harness/adapters/parallel.py`).
+- **Outside the default run:** `firecrawl_agent_apollo` is an agent that may search, fetch pages and call Apollo; its answer is graded as written. `model_only` is a no-search baseline. Both run only when named with `--endpoints`.
 - **Scoring:** `judge/extraction.py` extracts an answer from the returned snippets alone, and `judge/judging.py` grades the extracted answer against ground-truth facts (`cells`) and checks snippet provenance.
 - **Headline metrics:** Extracted-answer accuracy, cost per 1,000 correct answers, latency, and token efficiency.
 
 ## Tools evaluated
 
-16 tools configured in [`tools/`](tools/README.md):
+14 tools configured in [`tools/`](tools/README.md), plus the `model_only` baseline:
 
-- **Web search APIs:** `brave`, `context`, `exa`, `firecrawl`, `linkup`, `nimble`, `parallel`, `perplexity`, `serp`, `tavily`, `tinyfish`, `you`
-- **News indexes:** `autobound`, `datahyena`, `predictleads`, `seltz`
+- **Web search APIs:** `brave`, `context`, `exa`, `firecrawl`, `keenable`, `linkup`, `nimble`, `parallel`, `perplexity`, `serp`, `tavily`, `tinyfish`, `you`, and `seltz` (web scope)
+- **Agents (run when named):** `firecrawl_agent_apollo`
 
 ## Dataset
 
@@ -34,7 +35,7 @@ See [`data/README.md`](data/README.md) for the complete JSON schema.
 
 - [`data/`](data/README.md): Question file schema and dataset instructions (no question files committed).
 - [`harness/`](harness/README.md): Benchmark CLI (`list-providers`, `run`, `evaluate`, `build-snapshot`, `verify`), orchestration, and tool adapters.
-- [`tools/`](tools/README.md): One `<tool>.yaml` config per search API or news index, with setups and pricing (16 tools).
+- [`tools/`](tools/README.md): One `<tool>.yaml` config per search API or news index, with setups and pricing (14 tools and the `model_only` baseline).
 - [`judge/`](judge/README.md): Answer extraction, ground-truth grading, and board aggregation.
 - [`benchmark.yaml`](benchmark.yaml): Benchmark contract, scope, and refresh cadence.
 - [`AGENTS.md`](AGENTS.md): Entry guide for coding agents.

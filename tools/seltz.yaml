@@ -1,7 +1,15 @@
 tool: seltz
 setups:
-  seltz_news:
+  seltz_web:
     class: main
+    pricing:
+      list_usd: 0.005
+      basis: list
+  # Same scope and result count; returns the highest-scoring passages instead of full content.
+  seltz_web_snippets:
+    class: main
+    settings:
+      snippets: true
     pricing:
       list_usd: 0.005
       basis: list

@@ -8,7 +8,8 @@ import requests
 
 from .models import Attempt, HttpAudit
 
-RETRYABLE = {429, 500, 502, 503, 504}
+# Same retry policy as the published runs. Retry waits count toward a request's latency.
+RETRYABLE = {429, 500, 502, 503}
 SECRET_HEADER_PARTS = ("authorization", "key", "token", "secret", "password")
 
 
@@ -60,14 +61,14 @@ def request_json(
             attempts.append(Attempt(number=index + 1, status_code=status, latency_ms=elapsed, ok=ok, error=error))
             if ok or status not in RETRYABLE or index + 1 == max_attempts:
                 break
-            time.sleep(min(2 ** index, 8))
+            time.sleep(8 * (index + 1))
         except requests.RequestException as exc:
             elapsed = round((time.perf_counter() - attempt_started) * 1000)
             error = f"{type(exc).__name__}: {exc}"
             attempts.append(Attempt(number=index + 1, latency_ms=elapsed, ok=False, error=error))
             if index + 1 == max_attempts:
                 break
-            time.sleep(min(2 ** index, 8))
+            time.sleep(4 * (index + 1))
 
     return HttpAudit(
         method=method,

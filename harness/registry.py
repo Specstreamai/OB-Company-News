@@ -22,13 +22,12 @@ TOOLS = (
     "perplexity",
     "tinyfish",
     "firecrawl",
-    "predictleads",
-    "datahyena",
-    "autobound",
     "seltz",
     "tavily",
     "serp",
     "linkup",
+    "keenable",
+    "model_only",
 )
 
 
@@ -49,8 +48,8 @@ def all_adapters() -> dict[str, ProviderAdapter]:
     return {name: adapter for name, (adapter, _) in _setups().items()}
 
 
-def list_prices() -> dict[str, float]:
-    return {name: float(spec["pricing"]["list_usd"]) for name, (_, spec) in _setups().items()}
+def pricing() -> dict[str, dict[str, Any]]:
+    return {name: dict(spec["pricing"]) for name, (_, spec) in _setups().items()}
 
 
 DEFAULT_ENDPOINTS = tuple(name for name, (_, spec) in _setups().items() if spec["class"] == "main")

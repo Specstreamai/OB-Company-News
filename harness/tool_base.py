@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Callable, Literal
 from urllib.parse import urlparse
 
-from .http_client import now, request_json
-from .models import Case, Hit, HttpAudit, SearchResult
+from .http_client import request_json
+from .models import Case, Hit, SearchResult
 
 RequestBuilder = Callable[[Case], tuple[str, str, dict[str, str], dict[str, Any] | None, dict[str, Any] | None, int]]
 Parser = Callable[[Any], list[Hit]]
@@ -27,7 +28,8 @@ def hit(url: Any, title: Any = "", snippet: Any = "", **metadata: Any) -> Hit | 
     return Hit(
         url=clean_url,
         title=str(title or "").strip(),
-        snippet=str(snippet or "").strip(),
+        # Whitespace runs (newlines included) collapse to one space; the text is otherwise kept whole.
+        snippet=re.sub(r"\s+", " ", str(snippet or "")).strip(),
         metadata=metadata,
     )
 
@@ -47,22 +49,9 @@ def dedupe(rows: list[Hit], limit: int = 10) -> list[Hit]:
     return output
 
 
-def skipped(endpoint: str, case: Case, reason: str) -> SearchResult:
-    stamp = now()
-    return SearchResult(
-        endpoint=endpoint,
-        surface="news-index",
-        hits=[],
-        audit=HttpAudit(
-            method="SKIP", url="", request={"case_id": case.id}, response={"skip_reason": reason},
-            ok=True, error="", attempts=[], latency_ms=None, started_at=stamp, ended_at=stamp,
-        ),
-    )
-
-
 class ProviderAdapter(ABC):
     name: str
-    surface: Literal["web-search", "news-index"]
+    surface: Literal["web-search", "news-index", "agent", "baseline"]
     docs_url: str
     required_env: tuple[str, ...]
 

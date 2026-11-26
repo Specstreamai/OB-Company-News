@@ -5,3 +5,20 @@ setups:
     pricing:
       list_usd: 0.005
       basis: list
+  # Firecrawl Agent with Apollo as its Alexandria data toolkit. An agent, not one search call: it may
+  # search the web, fetch pages and call Apollo, then returns one answer that the judge grades directly.
+  # Runs only when named: --endpoints firecrawl_agent_apollo
+  firecrawl_agent_apollo:
+    class: agent
+    settings:
+      kind: agent
+      model: spark-2
+      effort: medium
+      max_credits: 800
+      toolkits: [apollo]
+      max_toolkit_calls: 16
+    pricing:
+      # Billed per job in the credits it used (creditsUsed); Standard top-up $5 / 2,000 credits.
+      # Mean 8.9 credits ($0.022) per question on the 300-question held-out run of 2026-11-16.
+      credit_usd: 0.0025
+      basis: credits
