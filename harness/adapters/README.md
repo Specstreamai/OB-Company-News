@@ -7,11 +7,11 @@ Web search tools take the question as written:
 - `brave.py` — Brave web search and Brave LLM context.
 - `context.py` — Context Developer search, with highlights (`context`) or without (`context_nohl`).
 - `exa.py` — Exa search with highlights.
-- `firecrawl.py` — Firecrawl search, and the Firecrawl Agent with an Alexandria data toolkit (`firecrawl_agent_apollo`): starts a job, polls it, and returns its answer as one hit.
+- `firecrawl.py` — Firecrawl search, and Firecrawl Agent with the Apollo toolkit (`firecrawl_agent_apollo`): starts a job, polls it, and returns the answer as one hit.
 - `keenable.py` — Keenable search.
 - `linkup.py` — Linkup search results.
 - `nimble.py` — Nimble search.
-- `parallel.py` — Parallel search. The extract model writes one objective and 2-3 keyword queries per question, shared by every Parallel mode.
+- `parallel.py` — Parallel search. The extract model writes one objective and 2-3 keyword queries per question, shared across modes.
 - `perplexity.py` — Perplexity search.
 - `serp.py` — Google results through a RapidAPI search service.
 - `tavily.py` — Tavily search.
@@ -21,6 +21,6 @@ Web search tools take the question as written:
 
 The baseline needs no tool:
 
-- `model_only.py` — Makes no call; the judge step asks the extract model to answer from its own knowledge.
+- `model_only.py` — Makes no call; the extract model answers from its own knowledge.
 
 Each file ends with `setup(name, ...)`. Its arguments are the `settings` from the tool's yaml file.

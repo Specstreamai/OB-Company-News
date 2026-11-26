@@ -1,6 +1,6 @@
 # OB-Company-News
 
-Open, independent benchmark of APIs for company news: web search APIs and dedicated news indexes, measured on how accurately they surface recent, verified company news for AI agents, such as executive hires, acquisitions, product launches and funding. Every search tool answers the same questions with one request and no page fetch, graded by the same judge (Parallel's keyword queries are written by the extract model, as its docs ask). Tools measured: Brave, Context, Exa, Firecrawl, Keenable, Linkup, Nimble, Parallel, Perplexity, SERP, Tavily, TinyFish, You.com and Seltz.
+Open, independent benchmark of APIs for company news: web search APIs and dedicated news indexes, measured on how accurately they surface recent, verified company news for AI agents, such as executive hires, acquisitions, product launches and funding. Every search tool answers the same questions with one request and no page fetch, graded by the same judge. Tools measured: Brave, Context, Exa, Firecrawl, Keenable, Linkup, Nimble, Parallel, Perplexity, SERP, Tavily, TinyFish, You.com and Seltz.
 
 **Live leaderboard:** [openbenchmarks.com/company-news](https://openbenchmarks.com/company-news) · **Public dataset:** [`openbenchmarks/OB-News-Websearch`](https://huggingface.co/datasets/openbenchmarks/OB-News-Websearch)
 
@@ -10,8 +10,8 @@ Published and maintained by **[OpenBenchmarks Labs](https://openbenchmarks.com)*
 
 General web search APIs and dedicated company-news indexes are evaluated on factual company-news questions (such as executive hires, acquisitions, product launches, and funding announcements).
 
-- **Fixed protocol:** One query per question, no query rewriting, and no secondary page fetch. One exception follows the tool's own documentation: Parallel's Search API asks for short keyword queries next to an objective, so the Parallel setups send one plan per question written by the extract model (`harness/adapters/parallel.py`).
-- **Outside the default run:** `firecrawl_agent_apollo` (Firecrawl Agent with Apollo as its Alexandria data toolkit) is an agent: it may search, fetch pages and call Apollo, and returns one answer that the judge grades as written. `model_only` is a no-search baseline in which the extract model answers from its own knowledge. Run either by naming it with `--endpoints`.
+- **Fixed protocol:** One query per question, no query rewriting, and no secondary page fetch. Parallel is the exception: its API takes an objective plus keyword queries, which the extract model writes (`harness/adapters/parallel.py`).
+- **Outside the default run:** `firecrawl_agent_apollo` is an agent that may search, fetch pages and call Apollo; its answer is graded as written. `model_only` is a no-search baseline. Both run only when named with `--endpoints`.
 - **Scoring:** `judge/extraction.py` extracts an answer from the returned snippets alone, and `judge/judging.py` grades the extracted answer against ground-truth facts (`cells`) and checks snippet provenance.
 - **Headline metrics:** Extracted-answer accuracy, cost per 1,000 correct answers, latency, and token efficiency.
 
